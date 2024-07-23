@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
 
 const Index = () => {
   const [stories, setStories] = useState([]);
@@ -37,39 +36,27 @@ const Index = () => {
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const MotionCard = motion(Card);
-
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-red-100">
       <header className="bg-gradient-to-r from-orange-500 to-pink-500 text-white py-8 shadow-lg">
         <div className="container mx-auto px-4">
-          <motion.h1 
-            className="text-5xl font-bold mb-2"
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <h1 className="text-5xl font-bold mb-2 animate-fade-in-down">
             Hacker News Top 100
-          </motion.h1>
-          <motion.p 
-            className="text-xl"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
+          </h1>
+          <p className="text-xl animate-fade-in-up">
             Stay updated with the hottest tech stories
-          </motion.p>
+          </p>
         </div>
       </header>
 
       <main className="container mx-auto p-4 flex-grow">
-        <div className="mb-6 flex justify-between items-center">
+        <div className="mb-6 flex flex-col sm:flex-row justify-between items-center">
           <Input
             type="text"
             placeholder="Search stories..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full max-w-md"
+            className="w-full max-w-md mb-4 sm:mb-0"
           />
           <div className="flex space-x-2">
             <Button
@@ -94,30 +81,12 @@ const Index = () => {
             ))}
           </div>
         ) : (
-          <motion.div 
-            className={`grid gap-4 ${currentView === 'grid' ? 'md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: {
-                  staggerChildren: 0.1
-                }
-              }
-            }}
-          >
-            {filteredStories.map(story => (
-              <MotionCard 
+          <div className={`grid gap-4 ${currentView === 'grid' ? 'md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+            {filteredStories.map((story, index) => (
+              <Card 
                 key={story.id} 
-                className="hover:shadow-xl transition-shadow duration-300 bg-white/80 backdrop-blur-sm"
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 }
-                }}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
+                className="hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm animate-fade-in"
+                style={{animationDelay: `${index * 50}ms`}}
               >
                 <CardHeader>
                   <CardTitle className="text-lg font-bold text-gray-800">{story.title}</CardTitle>
@@ -135,9 +104,9 @@ const Index = () => {
                     Read more
                   </Button>
                 </CardFooter>
-              </MotionCard>
+              </Card>
             ))}
-          </motion.div>
+          </div>
         )}
       </main>
 
@@ -147,7 +116,7 @@ const Index = () => {
             © {new Date().getFullYear()} Hacker News Top 100
           </p>
           <p className="text-sm">
-            Powered by the Hacker News API | Built with React, Shadcn, and Framer Motion
+            Powered by the Hacker News API | Built with React and Shadcn
           </p>
         </div>
       </footer>
