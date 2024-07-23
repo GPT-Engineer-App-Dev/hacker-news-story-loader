@@ -34,38 +34,50 @@ const Index = () => {
   );
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Top 100 Hacker News Stories</h1>
-      <Input
-        type="text"
-        placeholder="Search stories..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="mb-4"
-      />
-      {loading ? (
-        <div className="space-y-4">
-          {[...Array(10)].map((_, index) => (
-            <Skeleton key={index} className="h-20 w-full" />
-          ))}
+    <div className="flex flex-col min-h-screen">
+      <main className="container mx-auto p-4 flex-grow">
+        <h1 className="text-3xl font-bold mb-4">Top 100 Hacker News Stories</h1>
+        <Input
+          type="text"
+          placeholder="Search stories..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="mb-4"
+        />
+        {loading ? (
+          <div className="space-y-4">
+            {[...Array(10)].map((_, index) => (
+              <Skeleton key={index} className="h-20 w-full" />
+            ))}
+          </div>
+        ) : (
+          <ul className="space-y-4">
+            {filteredStories.map(story => (
+              <li key={story.id} className="border p-4 rounded-lg">
+                <h2 className="text-xl font-semibold">{story.title}</h2>
+                <p className="text-sm text-gray-500">Upvotes: {story.score}</p>
+                <Button
+                  variant="link"
+                  className="p-0 h-auto"
+                  onClick={() => window.open(story.url, '_blank')}
+                >
+                  Read more
+                </Button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </main>
+      <footer className="bg-gray-100 mt-8">
+        <div className="container mx-auto p-4 text-center">
+          <p className="text-sm text-gray-600">
+            © {new Date().getFullYear()} Hacker News Top 100. All rights reserved.
+          </p>
+          <p className="text-xs text-gray-500 mt-1">
+            Powered by the Hacker News API
+          </p>
         </div>
-      ) : (
-        <ul className="space-y-4">
-          {filteredStories.map(story => (
-            <li key={story.id} className="border p-4 rounded-lg">
-              <h2 className="text-xl font-semibold">{story.title}</h2>
-              <p className="text-sm text-gray-500">Upvotes: {story.score}</p>
-              <Button
-                variant="link"
-                className="p-0 h-auto"
-                onClick={() => window.open(story.url, '_blank')}
-              >
-                Read more
-              </Button>
-            </li>
-          ))}
-        </ul>
-      )}
+      </footer>
     </div>
   );
 };
